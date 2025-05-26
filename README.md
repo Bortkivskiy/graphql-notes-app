@@ -1,4 +1,5 @@
 # Лабораторна робота №2 — GraphQL Notes App
+Бортківський Олександр
 
 ## Стек технологій:
 - Node.js + GraphQL (Apollo Server)
