@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Notes App</title>
+</head>
+
+<body>
+  <h1>Notes App</h1>
+
+  <form id="noteForm">
+    <input type="text" id="title" placeholder="Title" required />
+    <textarea id="content" placeholder="Content" required></textarea>
+    <button type="submit">Add Note</button>
+  </form>
+
+  <button id="loadBtn">Load Notes</button>
+  <ul id="notesList"></ul>
+
+  <script>
+    const graphqlEndpoint = 'http://localhost:8888/graphql';
+
+    document.getElementById('loadBtn').addEventListener('click', async () => {
+      const query = `
+        query {
+          notes {
+            _id
+            title
+            content
+          }
+        }
+      `;
+      const response = await fetch(graphqlEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query })
+      });
+      const result = await response.json();
+      const notesList = document.getElementById('notesList');
+      notesList.innerHTML = '';
+      result.data.notes.forEach(note => {
+        const li = document.createElement('li');
+        li.innerText = `${note.title}: ${note.content}`;
+        notesList.appendChild(li);
+      });
+    });
+
+    document.getElementById('noteForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+
+      const mutation = `
+        mutation {
+          createNote(title: "${title}", content: "${content}") {
+            _id
+            title
+            content
+          }
+        }
+      `;
+      const response = await fetch(graphqlEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: mutation })
+      });
+      const result = await response.json();
+      alert("Note created!");
+      document.getElementById('noteForm').reset();
+    });
+  </script>
+</body>
+
+</html>
