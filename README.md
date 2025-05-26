@@ -12,7 +12,7 @@
 npm install
 
 Додати файл .env у корінь з рядком:
-MONGODB_URI=your_mongodb_atlas_uri
+MONGODB_URI=mongodb+srv://username:dynamo1927@cluster.mongodb.net/dbname?retryWrites=true&w=majority
 
 Запустити:
 netlify dev
